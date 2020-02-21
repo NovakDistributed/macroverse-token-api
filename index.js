@@ -83,7 +83,7 @@ async function handle(request) {
       return new Response('Moon -1 cannot exist\n', { status: 400 })
     }
     descriptors.push('the')
-    descriptors.push(ordinal(moon))
+    descriptors.push(ordinal(moon + 1))
     descriptors.push('moon or ring system of')
 
     if (!type) {
@@ -92,7 +92,7 @@ async function handle(request) {
   }
   if (planet) {
     descriptors.push('the')
-    descriptors.push(ordinal(planet))
+    descriptors.push(ordinal(planet + 1))
     descriptors.push('planet')
     if (!moon) {
       // If moon isn't set or -1 for land, this may be an asteroid belt
@@ -106,7 +106,7 @@ async function handle(request) {
   }
   if (system) {
     descriptors.push('the')
-    descriptors.push(ordinal(system))
+    descriptors.push(ordinal(system + 1))
     descriptors.push('star or stellar-equivalent object in')
     
     if (!type) {
@@ -121,11 +121,12 @@ async function handle(request) {
   metadata = {
     'name': "Macroverse " + type,
     'description': capitalize(descriptors.join(' ')),
-    "image": "https://macroverse.io/img/logo-big.png",
+    'image': 'https://macroverse.io/img/logo-big.png',
+    'external_url': 'https://novakdistributed.github.io/macroverse-explorer/#' + keypath, 
   }
 
   // Serialize and send
-  return new Response(JSON.stringify(metadata), {
+  return new Response(JSON.stringify(metadata) + '\n', {
     headers: {'content-type': 'text/json'}
   })
 }
