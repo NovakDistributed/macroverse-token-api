@@ -83,7 +83,7 @@ async function handle(request) {
       return new Response('Moon -1 cannot exist\n', { status: 400 })
     }
     descriptors.push('the')
-    descriptors.push(ordinal(moon + 1))
+    descriptors.push(ordinal(parseInt(moon) + 1))
     descriptors.push('moon or ring system of')
 
     if (!type) {
@@ -92,7 +92,7 @@ async function handle(request) {
   }
   if (planet) {
     descriptors.push('the')
-    descriptors.push(ordinal(planet + 1))
+    descriptors.push(ordinal(parseInt(planet) + 1))
     descriptors.push('planet')
     if (!moon) {
       // If moon isn't set or -1 for land, this may be an asteroid belt
@@ -106,7 +106,7 @@ async function handle(request) {
   }
   if (system) {
     descriptors.push('the')
-    descriptors.push(ordinal(system + 1))
+    descriptors.push(ordinal(parseInt(system) + 1))
     descriptors.push('star or stellar-equivalent object in')
     
     if (!type) {
