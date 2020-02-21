@@ -8,6 +8,32 @@ addEventListener('fetch', (e) => {
   e.respondWith(handle(e.request))
 })
 
+// Format a number as an ordinal (1st, 23rd, etc.)
+function ordinal(i) {
+  let baseNumber = i.toString()
+  let suffix = undefined
+  switch(baseNumber[baseNumber.length - 1]) {
+  case '1':
+    suffix = 'st'
+    break
+  case '2':
+    suffix = 'nd'
+    break
+  case '3':
+    suffix = 'rd'
+    break
+  default:
+    suffix = 'th'
+    break
+  }
+
+  return baseNumber + suffix
+}
+
+// Capitalize the first letter of a string
+function capitalize(s) {
+  return s[0].toUpperCase() + s.substring(1)
+}
 
 async function handle(request) {
   // Parse the URL. It's not a real URL object on Cloudflare; it is just a string.
@@ -25,7 +51,81 @@ async function handle(request) {
   // Parse the token into a keypath. It automatically gets bignumber'd
   let keypath = mv.tokenToKeypath(match[2])
 
-  return new Response('Macroverse token ' + keypath + '\n', {
-    headers: {'content-type': 'text/plain'}
+  // Figure out what it is
+  let parts = keypath.split('.')
+
+  // Find all the coordinates
+  let sectorX = parts[0]
+  let sectorY = parts[1]
+  let sectorZ = parts[2]
+  let system = parts.length > 3 ? parts[3] : undefined
+  let planet = parts.length > 4 ? parts[4] : undefined
+  let moon = parts.length > 5 ? parts[5] : undefined
+  let landSpec = parts.length > 6 ? parts.slice(6) : undefined
+
+  // Compose a description of where this is.
+  descriptors = ['A deed representing ownership of']
+  
+  // And work out a definite type
+  let type = undefined
+
+  if (landSpec) {
+    // TODO: describe the land better
+    descriptors.push('a plot of land')
+    descriptors.push('on')
+
+    if (!type) {
+      type = 'Land'
+    }
+  }
+  if (moon) {
+    if (moon == '-1' && !landSpec) {
+      return new Response('Moon -1 cannot exist\n', { status: 400 })
+    }
+    descriptors.push('the')
+    descriptors.push(ordinal(moon))
+    descriptors.push('moon or ring system of')
+
+    if (!type) {
+      type = 'Moon'
+    }
+  }
+  if (planet) {
+    descriptors.push('the')
+    descriptors.push(ordinal(planet))
+    descriptors.push('planet')
+    if (!moon) {
+      // If moon isn't set or -1 for land, this may be an asteroid belt
+      descriptors.push('or asteroid belt')
+    }
+    descriptors.push('orbiting')
+
+    if (!type) {
+      type = 'Planet'
+    }
+  }
+  if (system) {
+    descriptors.push('the')
+    descriptors.push(ordinal(system))
+    descriptors.push('star or stellar-equivalent object in')
+    
+    if (!type) {
+      type = 'Star System'
+    }
+  } else {
+    return new Response('Sector tokens cannot exist\n', { status: 400 })
+  }
+  descriptors.push('sector <' + sectorX + ', ' + sectorY + ', ' + sectorZ + '> of the Macroverse world')
+
+  // Compose the metadata object
+  metadata = {
+    'name': "Macroverse " + type,
+    'description': capitalize(descriptors.join(' ')),
+    "image": "https://macroverse.io/img/logo-big.png",
+  }
+
+  // Serialize and send
+  return new Response(JSON.stringify(metadata), {
+    headers: {'content-type': 'text/json'}
   })
 }
