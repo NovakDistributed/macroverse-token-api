@@ -1,0 +1,14 @@
+{
+  "name": "macroverse-token-api",
+  "version": "0.0.1",
+  "description": "ERC721 metadata server for Macroverse virtual real estate",
+  "main": "index.js",
+  "homepage": "https://macroverse.io/",
+  "bugs": {
+    "url": "https://github.com/novakdistributed/macroverse-token-api/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "macroverse": "^2.0.0-beta.0"
+  }
+}

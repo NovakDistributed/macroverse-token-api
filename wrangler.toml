@@ -1,0 +1,6 @@
+name = "macroverse-token-api"
+type = "webpack"
+account_id = "c5ef0c61f14a2d110e53f749f6aac4f0"
+workers_dev = true
+route = ""
+zone_id = ""
