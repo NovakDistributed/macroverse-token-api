@@ -119,7 +119,7 @@ async function handle(request) {
 
   // Compose the metadata object
   metadata = {
-    'name': "Macroverse " + type,
+    'name': 'Macroverse ' + type,
     'description': capitalize(descriptors.join(' ')),
     'image': 'https://macroverse.io/img/logo-big.png',
     'external_url': 'https://novakdistributed.github.io/macroverse-explorer/#' + keypath, 
