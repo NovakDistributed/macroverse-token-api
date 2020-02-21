@@ -1,6 +1,6 @@
 name = "macroverse-token-api"
 type = "webpack"
 workers_dev = false
-route = "https://api.macroverse.io/vre/v1"
+route = "https://api.macroverse.io/vre/v1/*"
 zone_id = "63fe7a8bbfdf5fa8f2ee753a4db9caff"
 account_id = "c5ef0c61f14a2d110e53f749f6aac4f0"
