@@ -30,6 +30,32 @@ function ordinal(i) {
   return baseNumber + suffix
 }
 
+// Format a number as a Roman numeral
+function roman(i) {
+  return ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'][i]
+}
+
+// Format a number as a lowercase moon letter.
+function letter(i) {
+  return ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k'][i]
+}
+
+function formatSector(x, y, z) {
+  return '(' + x + ',' + y + ',' + z + ')'
+}
+
+function formatStar(x, y, z, s) {
+  return formatSector(x, y, z) + '::' + (parseInt(s) + 1)
+}
+
+function formatPlanet(x, y, z, s, p) {
+  return formatStar(z, y, z, s) + ' ' + roman(parseInt(p))
+}
+
+function formatMoon(x, y, z, s, p, m) {
+  return formatPlanet(z, y, z, s, p) + letter(parseInt(m))
+}
+
 // Capitalize the first letter of a string
 function capitalize(s) {
   return s[0].toUpperCase() + s.substring(1)
@@ -67,6 +93,8 @@ async function handle(request) {
   
   // And work out a definite type
   let type = undefined
+  // And a short representation that looks cool
+  let designator = undefined
 
   if (landSpec) {
     // TODO: describe the land better
@@ -75,6 +103,7 @@ async function handle(request) {
 
     if (!type) {
       type = 'Land'
+      // Let designator be filled in for planet or moon
     }
   }
   if (moon) {
@@ -87,6 +116,9 @@ async function handle(request) {
 
     if (!type) {
       type = 'Moon'
+    }
+    if (!designator) {
+      designator = formatMoon(sectorX, sectorY, sectorZ, system, planet, moon)
     }
   }
   if (planet) {
@@ -102,6 +134,9 @@ async function handle(request) {
     if (!type) {
       type = 'Planet'
     }
+    if (!designator) {
+      designator = formatPlanet(sectorX, sectorY, sectorZ, system, planet)
+    }
   }
   if (system) {
     descriptors.push('the')
@@ -111,10 +146,13 @@ async function handle(request) {
     if (!type) {
       type = 'Star System'
     }
+    if (!designator) {
+      designator = formatSystem(sectorX, sectorY, sectorZ, system)
+    }
   } else {
     return new Response('Sector tokens cannot exist\n', { status: 400 })
   }
-  descriptors.push('sector (' + sectorX + ', ' + sectorY + ', ' + sectorZ + ') of the Macroverse world')
+  descriptors.push('sector ' + formatSector(sectorX, sectorY, sectorZ) + ' of the Macroverse world')
 
   if (chain == '4') {
     descriptors.push('on the Rinkeby testnet')
@@ -122,7 +160,7 @@ async function handle(request) {
 
   // Compose the metadata object
   metadata = {
-    'name': 'Macroverse ' + type + ' ' + keypath,
+    'name': 'Macroverse ' + type + ' ' + (type == 'Land' ? 'on ' : '') + designator,
     'description': capitalize(descriptors.join(' ')) + '.',
     'image': 'https://macroverse.io/img/logo-big.png',
     'external_url': 'https://novakdistributed.github.io/macroverse-explorer/#' + keypath, 
