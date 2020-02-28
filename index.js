@@ -114,7 +114,7 @@ async function handle(request) {
   } else {
     return new Response('Sector tokens cannot exist\n', { status: 400 })
   }
-  descriptors.push('sector <' + sectorX + ', ' + sectorY + ', ' + sectorZ + '> of the Macroverse world')
+  descriptors.push('sector (' + sectorX + ', ' + sectorY + ', ' + sectorZ + ') of the Macroverse world')
 
   if (chain == '4') {
     descriptors.push('on the Rinkeby testnet')
