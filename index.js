@@ -62,11 +62,11 @@ function formatStar(x, y, z, s) {
 }
 
 function formatPlanet(x, y, z, s, p) {
-  return formatStar(z, y, z, s) + ' ' + roman(parseInt(p))
+  return formatStar(x, y, z, s) + ' ' + roman(parseInt(p))
 }
 
 function formatMoon(x, y, z, s, p, m) {
-  return formatPlanet(z, y, z, s, p) + letter(parseInt(m))
+  return formatPlanet(x, y, z, s, p) + letter(parseInt(m))
 }
 
 // Capitalize the first letter of a string
