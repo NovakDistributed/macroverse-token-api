@@ -25,7 +25,7 @@ curl https://api.macroverse.io/vre/v1/chain/4/token/1770887488800634701954 | jq
 
 You need to have Cloudflare's [`wrangler` tool](https://github.com/cloudflare/wrangler) to deploy.
 
-For development, with Wrangler 1.8+, you can do:
+For development, you can do:
 
 ```
 wrangler dev
@@ -38,5 +38,5 @@ For deployment, set the `CF_API_TOKEN` environment variable to an API token on t
 Then run:
 
 ```
-wrangler deploy
+wrangler publish
 ```
