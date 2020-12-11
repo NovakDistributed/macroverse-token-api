@@ -12,20 +12,33 @@ addEventListener('fetch', (e) => {
 function ordinal(i) {
   let baseNumber = i.toString()
   let suffix = undefined
-  switch(baseNumber[baseNumber.length - 1]) {
-  case '1':
-    suffix = 'st'
-    break
-  case '2':
-    suffix = 'nd'
-    break
-  case '3':
-    suffix = 'rd'
-    break
-  default:
+  switch(baseNumber) {
+  case '11':
+    // Fall through
+  case '12':
+    // Fall through
+  case '13':
+    // Teens are special
     suffix = 'th'
     break
+  default:
+    switch(baseNumber[baseNumber.length - 1]) {
+    case '1':
+      suffix = 'st'
+      break
+    case '2':
+      suffix = 'nd'
+      break
+    case '3':
+      suffix = 'rd'
+      break
+    default:
+      suffix = 'th'
+      break
+    }
   }
+
+  // We don't go up past 100 to get to e.g. one hundred and eleventh
 
   return baseNumber + suffix
 }
